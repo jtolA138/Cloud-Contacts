@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contacts Manager</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <!-- Main Container -->
+    <div
+      class="container-fluid"
+      style="height: 100vh; overflow-y: hidden; margin: 0"
+    >
+      <!-- Navbar Row -->
+      <div class="row" style="background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%); margin: 0;">
+        <nav class="navbar" style="width: 100%;">  
+	  <a id="logophoto" href="#"
+            ><img src="images/cloudlogo.png" alt="Cloud Contacts Logo" style="max-height: 120px; width: auto;"
+	  /></a>
+          <div>
+            <span class="navbar-text"
+              >Signed in as <span id="username">User</span></span
+            >
+	    <button id="signout-btn" class="btn btn-light ml-2" onclick="doLogout()">Sign Out</button>
+            <button id="delete-account-btn" class="btn btn-danger ml-2" onclick="deleteUserAccount()">Delete Account</button>
+           </div>
+         </nav>
+       </div>
+
+      <!-- Content Row -->
+      <div class="row" style="overflow: hidden">
+        <!-- Left Column (Contact List) -->
+        <div
+          class="col-md-4 p-3"
+          style="background-color: #1d2434; height: calc(100vh - 100px)"
+        >
+          <div class="input-group mb-3">
+            <input
+              type="search"
+              class="form-control"
+              id="searchContact"
+              placeholder="Search Contacts"
+              aria-label="Search Contacts"
+            />
+            <div class="input-group-append">
+              <button class="btn btn-secondary ml-2" id="searchButton">
+                <i class="fas fa-search"></i>
+              </button>
+              <button class="btn btn-secondary ml-2" id="addContactBtn">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+          <!-- Adjusted Contact Cards Container for Scrolling -->
+          <div
+            id="contactCards"
+            style="overflow-y: auto; height: calc(100vh - 186px)"
+          >
+	  	<p class="text-white text-center mt-4">Use the search box above to find contacts</p>
+            <!-- Contact Cards will be dynamically inserted here -->
+            <!-- Example Contact Card (repeat as needed) -->
+            <!-- <div class="card contact-card" data-contact-id="${contact.ID}">
+              <div class="card-body">
+                <h5 class="card-title">Bruh Man</h5>
+                <p class="card-text">Email: ${contact.Email}</p>
+                <p class="card-text">Phone: ${contact.Phone}</p>
+              </div>
+            </div>
+            <div class="card contact-card" data-contact-id="${contact.ID}">
+              <div class="card-body">
+                <h5 class="card-title">Bruh Man</h5>
+                <p class="card-text">Email: ${contact.Email}</p>
+                <p class="card-text">Phone: ${contact.Phone}</p>
+              </div>
+            </div>
+            <div class="card contact-card" data-contact-id="${contact.ID}">
+              <div class="card-body">
+                <h5 class="card-title">Bruh Man</h5>
+                <p class="card-text">Email: ${contact.Email}</p>
+                <p class="card-text">Phone: ${contact.Phone}</p>
+              </div>
+            </div>
+            <div class="card contact-card" data-contact-id="${contact.ID}">
+              <div class="card-body">
+                <h5 class="card-title">Bruh Man</h5>
+                <p class="card-text">Email: ${contact.Email}</p>
+                <p class="card-text">Phone: ${contact.Phone}</p>
+              </div>
+            </div>
+            <div class="card contact-card" data-contact-id="${contact.ID}">
+              <div class="card-body">
+                <h5 class="card-title">Bruh Man</h5>
+                <p class="card-text">Email: ${contact.Email}</p>
+                <p class="card-text">Phone: ${contact.Phone}</p>
+              </div>
+            </div>
+            <div class="card contact-card" data-contact-id="${contact.ID}">
+              <div class="card-body">
+                <h5 class="card-title">Bruh Man</h5>
+                <p class="card-text">Email: ${contact.Email}</p>
+                <p class="card-text">Phone: ${contact.Phone}</p>
+              </div>
+            </div>
+            <div class="card contact-card" data-contact-id="${contact.ID}">
+              <div class="card-body">
+                <h5 class="card-title">Bruh Man</h5>
+                <p class="card-text">Email: ${contact.Email}</p>
+                <p class="card-text">Phone: ${contact.Phone}</p>
+              </div>
+            </div> -->
+
+            <!-- Additional cards can be added here -->
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div
+  	  class="col-md-8"
+	  style="background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%); overflow-y: auto; padding: 0;"
+	>
+  	  <div id="contactDetails" style="height: 100%; width: 100%; padding: 0; margin: 0; display: flex; align-items: center; justify-content: center;">
+    	    <!-- Contact Information will be displayed here -->
+    	    <img
+      	      src="images/backgroundclouds.png"
+              style="height: 100%; width: 100%; object-fit: cover; display: block;"
+    	    />
+  	  </div>
+	</div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/code.js"></script>
+    <script
+      src="https://kit.fontawesome.com/e40faff299.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      updateSignedInAs();
+    </script>
+  </body>
+</html>
