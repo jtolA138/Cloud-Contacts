@@ -278,3 +278,17 @@ select{
     transform: scale(1.05);
 }
 
+/* Mobile back button */
+.mobile-back-btn {
+    display: inline-block !important;
+    background-color: #3498DB !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+}
+
+.mobile-back-btn:hover {
+    background-color: #2980B9 !important;
+}
+

@@ -9,6 +9,31 @@ const extension = "php";
 // make more error returns for signup, like one that same username cant eb created
 // no errors pops up for incorrect login rn
 
+// Mobile detection and helpers
+
+function isMobileView() {
+    return window.innerWidth <= 768;
+}
+
+function showMobileContactDetails() {
+    if (isMobileView()) {
+        const listColumn = document.getElementById('contactListColumn');
+        if (listColumn) {
+            listColumn.classList.add('mobile-hide-list');
+        }
+    }
+}
+
+function showMobileContactList() {
+    if (isMobileView()) {
+        const listColumn = document.getElementById('contactListColumn');
+        if (listColumn) {
+            listColumn.classList.remove('mobile-hide-list');
+        }
+        clearRightPanel();
+    }
+}
+
 async function doLogin(usernameParam = null, passwordParam = null) {
     let loginUsername = usernameParam || document.getElementById("loginUsername").value;
     let loginPassword = passwordParam || document.getElementById("loginPassword").value;
@@ -216,59 +241,101 @@ function populateContacts(contacts) {
 
 function displayContactDetails(contact) {
     const detailsDiv = document.getElementById("contactDetails");
+
+    // Mobile back button
+    const mobileBackBtn = isMobileView()
+        ? `<div style="width: 100%; text-align: center; padding: 20px 0 10px 0; position: relative; z-index: 100;">
+             <button class="btn btn-secondary mobile-back-btn" onclick="showMobileContactList()" style="padding: 10px 20px; font-size: 16px; position: relative; z-index: 100;">
+               ← Back to Contacts
+             </button>
+           </div>`
+        : '';
+
+    // Responsive cloud size - ORIGINAL desktop size, custom mobile
+    const cloudWidth = isMobileView() ? '1600px' : '1600px';
+    const cloudStyle = isMobileView()
+        ? `position: absolute; width: ${cloudWidth}; max-width: 300%; height: auto; z-index: 1; opacity: 0.95; pointer-events: none; left: 50%; transform: translateX(-50%);`
+        : `position: absolute; width: ${cloudWidth}; height: auto; z-index: 1; opacity: 0.95;`;
+
     detailsDiv.innerHTML = `
-        <div style="position: relative; padding: 40px; display: flex; align-items: center; justify-content: center; min-height: 400px;">
-            <img src="images/cloud.png" style="position: absolute; width: 1600px; height: auto; z-index: 1; opacity: 0.95;" />
-            <div style="position: relative; z-index: 2; text-align: center; padding: 40px;">
-                <h2 style="color: #2C3E50; font-weight: 700; margin-bottom: 25px;">${contact.firstname} ${contact.lastname}</h2>
-                <p style="color: #34495E; font-size: 18px; margin: 15px 0;"><strong>Email:</strong> ${contact.email || 'N/A'}</p>
-                <p style="color: #34495E; font-size: 18px; margin: 15px 0;"><strong>Phone:</strong> ${contact.phoneNumber || 'N/A'}</p>
-                <hr style="border: 1px solid rgba(0,0,0,0.1); margin: 25px 0;">
-                <button class="btn btn-primary" style="margin: 10px;" onclick="showEditForm(${contact.id}, '${contact.firstname}', '${contact.lastname}', '${contact.email || ''}', '${contact.phoneNumber || ''}')">Edit Contact</button>
-                <button class="btn btn-danger" style="margin: 10px;" onclick="deleteContact(${contact.id})">Delete Contact</button>
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%; ${isMobileView() ? 'overflow-x: hidden;' : ''}">
+            ${mobileBackBtn}
+            <div style="position: relative; padding: 40px; display: flex; align-items: center; justify-content: center; min-height: 400px; width: 100%;">
+                <img src="images/cloud.png" style="${cloudStyle}" />
+                <div style="position: relative; z-index: 2; text-align: center; padding: 40px; max-width: 90%;">
+                    <h2 style="color: #2C3E50; font-weight: 700; margin-bottom: 25px;">${contact.firstname} ${contact.lastname}</h2>
+                    <p style="color: #34495E; font-size: 18px; margin: 15px 0;"><strong>Email:</strong> ${contact.email || 'N/A'}</p>
+                    <p style="color: #34495E; font-size: 18px; margin: 15px 0;"><strong>Phone:</strong> ${contact.phoneNumber || 'N/A'}</p>
+                    <hr style="border: 1px solid rgba(0,0,0,0.1); margin: 25px 0;">
+                    <button class="btn btn-primary" style="margin: 10px; position: relative; z-index: 10;" onclick="showEditForm(${contact.id}, '${contact.firstname}', '${contact.lastname}', '${contact.email || ''}', '${contact.phoneNumber || ''}')">Edit Contact</button>
+                    <button class="btn btn-danger" style="margin: 10px; position: relative; z-index: 10;" onclick="deleteContact(${contact.id})">Delete Contact</button>
+                </div>
             </div>
         </div>
     `;
+
+    showMobileContactDetails();
 }
+
 
 function showEditForm(id, firstname, lastname, email, phone) {
     const detailsDiv = document.getElementById("contactDetails");
+    
+    const mobileBackBtn = isMobileView() 
+        ? `<div style="width: 100%; text-align: center; padding: 20px 0 10px 0; position: relative; z-index: 100;">
+             <button class="btn btn-secondary mobile-back-btn" onclick="showMobileContactList()" style="padding: 10px 20px; font-size: 16px; position: relative; z-index: 100;">
+               ← Back to Contacts
+             </button>
+           </div>`
+        : '';
+    
+    // ORIGINAL desktop behavior preserved
+    const cloudWidth = isMobileView() ? '1600px' : '1600px';
+    const cloudStyle = isMobileView() 
+        ? `position: absolute; width: ${cloudWidth}; max-width: 300%; height: auto; z-index: 1; opacity: 0.95; pointer-events: none; left: 50%; transform: translateX(-50%);`
+        : `position: absolute; width: ${cloudWidth}; height: auto; z-index: 1; opacity: 0.95;`;
+    
     detailsDiv.innerHTML = `
-        <div style="position: relative; padding: 40px; display: flex; align-items: center; justify-content: center; min-height: 500px;">
-            <img src="images/cloud.png" style="position: absolute; width: 1600px; height: auto; z-index: 1; opacity: 0.95;" />
-            <div style="position: relative; z-index: 2; width: 450px; padding: 30px;">
-                <h2 style="color: #2C3E50; font-weight: 700; text-align: center; margin-bottom: 25px;">Edit Contact</h2>
-                <form id="editContactForm">
-                    <input type="hidden" id="editContactId" value="${id}">
-                    
-                    <div class="form-group">
-                        <label style="color: #2C3E50; font-weight: 600;">First Name</label>
-                        <input type="text" class="form-control" id="editFirstName" value="${firstname}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label style="color: #2C3E50; font-weight: 600;">Last Name</label>
-                        <input type="text" class="form-control" id="editLastName" value="${lastname}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label style="color: #2C3E50; font-weight: 600;">Email</label>
-                        <input type="email" class="form-control" id="editEmail" value="${email}">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label style="color: #2C3E50; font-weight: 600;">Phone Number</label>
-                        <input type="tel" class="form-control" id="editPhoneNumber" value="${phone}">
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button type="button" class="btn btn-success" onclick="saveEditedContact()">Save Changes</button>
-                        <button type="button" class="btn btn-secondary ml-2" onclick="clearRightPanel()">Cancel</button>
-                    </div>
-                </form>
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%; ${isMobileView() ? 'overflow-x: hidden;' : ''}">
+            ${mobileBackBtn}
+            <div style="position: relative; padding: 40px; display: flex; align-items: center; justify-content: center; min-height: 500px; width: 100%;">
+                <img src="images/cloud.png" style="${cloudStyle}" />
+                <div style="position: relative; z-index: 2; width: 450px; max-width: 90%; padding: 30px;">
+                    <h2 style="color: #2C3E50; font-weight: 700; text-align: center; margin-bottom: 25px;">Edit Contact</h2>
+                    <form id="editContactForm">
+                        <input type="hidden" id="editContactId" value="${id}">
+                        
+                        <div class="form-group">
+                            <label style="color: #2C3E50; font-weight: 600;">First Name</label>
+                            <input type="text" class="form-control" id="editFirstName" value="${firstname}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="color: #2C3E50; font-weight: 600;">Last Name</label>
+                            <input type="text" class="form-control" id="editLastName" value="${lastname}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="color: #2C3E50; font-weight: 600;">Email</label>
+                            <input type="email" class="form-control" id="editEmail" value="${email}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="color: #2C3E50; font-weight: 600;">Phone Number</label>
+                            <input type="tel" class="form-control" id="editPhoneNumber" value="${phone}">
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button type="button" class="btn btn-success" style="position: relative; z-index: 10;" onclick="saveEditedContact()">Save Changes</button>
+                            <button type="button" class="btn btn-secondary ml-2" style="position: relative; z-index: 10;" onclick="handleCancelButton()">Cancel</button>
+			</div>
+                    </form>
+                </div>
             </div>
         </div>
     `;
+    
+    showMobileContactDetails();
 }
 
 
@@ -323,36 +390,56 @@ function clearRightPanel() {
 
 function showAddContactForm() {
     const detailsDiv = document.getElementById("contactDetails");
+    
+    const mobileBackBtn = isMobileView() 
+        ? `<div style="width: 100%; text-align: center; padding: 20px 0 10px 0; position: relative; z-index: 100;">
+             <button class="btn btn-secondary mobile-back-btn" onclick="showMobileContactList()" style="padding: 10px 20px; font-size: 16px; position: relative; z-index: 100;">
+               ← Back to Contacts
+             </button>
+           </div>`
+        : '';
+    
+    // ORIGINAL desktop behavior preserved
+    const cloudWidth = isMobileView() ? '1600px' : '1600px';
+    const cloudStyle = isMobileView() 
+        ? `position: absolute; width: ${cloudWidth}; max-width: 300%; height: auto; z-index: 1; opacity: 0.95; pointer-events: none; left: 50%; transform: translateX(-50%);`
+        : `position: absolute; width: ${cloudWidth}; height: auto; z-index: 1; opacity: 0.95;`;
+    
     detailsDiv.innerHTML = `
-        <div style="position: relative; padding: 40px; display: flex; align-items: center; justify-content: center; min-height: 500px;">
-            <img src="images/cloud.png" style="position: absolute; width: 1600px; height: auto; z-index: 1; opacity: 0.95;" />
-            <div style="position: relative; z-index: 2; width: 450px; padding: 30px;">
-                <h2 style="color: #2C3E50; font-weight: 700; text-align: center; margin-bottom: 25px;">Add New Contact</h2>
-                <form id="addContactForm">
-                    <div class="form-group">
-                        <label style="color: #2C3E50; font-weight: 600;">First Name</label>
-                        <input type="text" class="form-control" id="newFirstName" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="color: #2C3E50; font-weight: 600;">Last Name</label>
-                        <input type="text" class="form-control" id="newLastName" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="color: #2C3E50; font-weight: 600;">Email</label>
-                        <input type="email" class="form-control" id="newEmail">
-                    </div>
-                    <div class="form-group">
-                        <label style="color: #2C3E50; font-weight: 600;">Phone Number</label>
-                        <input type="tel" class="form-control" id="newPhoneNumber">
-                    </div>
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button type="button" class="btn btn-success" onclick="submitNewContact()">Save Contact</button>
-                        <button type="button" class="btn btn-secondary ml-2" onclick="clearRightPanel()">Cancel</button>
-                    </div>
-                </form>
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%; ${isMobileView() ? 'overflow-x: hidden;' : ''}">
+            ${mobileBackBtn}
+            <div style="position: relative; padding: 40px; display: flex; align-items: center; justify-content: center; min-height: 500px; width: 100%;">
+                <img src="images/cloud.png" style="${cloudStyle}" />
+                <div style="position: relative; z-index: 2; width: 450px; max-width: 90%; padding: 30px;">
+                    <h2 style="color: #2C3E50; font-weight: 700; text-align: center; margin-bottom: 25px;">Add New Contact</h2>
+                    <form id="addContactForm">
+                        <div class="form-group">
+                            <label style="color: #2C3E50; font-weight: 600;">First Name</label>
+                            <input type="text" class="form-control" id="newFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="color: #2C3E50; font-weight: 600;">Last Name</label>
+                            <input type="text" class="form-control" id="newLastName" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="color: #2C3E50; font-weight: 600;">Email</label>
+                            <input type="email" class="form-control" id="newEmail">
+                        </div>
+                        <div class="form-group">
+                            <label style="color: #2C3E50; font-weight: 600;">Phone Number</label>
+                            <input type="tel" class="form-control" id="newPhoneNumber">
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button type="button" class="btn btn-success" style="position: relative; z-index: 10;" onclick="submitNewContact()">Save Contact</button>
+                            <button type="button" class="btn btn-secondary ml-2" style="position: relative; z-index: 10;" onclick="handleCancelButton()">Cancel</button>
+			</div>
+                    </form>
+                </div>
             </div>
         </div>
     `;
+    
+    showMobileContactDetails();
 }
 
 
@@ -628,6 +715,17 @@ function saveEditedContact() {
     const contactId = document.getElementById("editContactId").value;
     updateContact(parseInt(contactId));
 }
+
+function handleCancelButton() {
+    if (isMobileView()) {
+        // On mobile: go back to contact list
+        showMobileContactList();
+    } else {
+        // On desktop: show background image
+        clearRightPanel();
+    }
+}
+
 
 // Initialize page
 document.addEventListener("DOMContentLoaded", function() {
